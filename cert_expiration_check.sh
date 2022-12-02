@@ -1,18 +1,8 @@
 #!/bin/bash
 
-# check opessl
-which openssl
-if [ $? != 0 ]; then
-    echo "no openssl"
-    exit 1
-fi
-
 #ssl_dir=/etc/kubernetes/ssl
 ssl_dir=./sample_dir
-expiration_threshold_seconds=3600
-
-# check if the ssl files exists
-ls $ssl_dir
+expiration_threshold_seconds=2592000 # 30days
 
 #for key file
 find $ssl_dir -type f -name \*.key | while read file; do
@@ -20,7 +10,7 @@ find $ssl_dir -type f -name \*.key | while read file; do
         echo "can not find key file"
         exit 1
     fi
-    cat $file | openssl rsa -noout -text
+    cat $file | openssl rsa -noout
     if [ $? != 0 ]; then
         echo "can not read key file: $file"
         exit 1
@@ -29,7 +19,7 @@ done
 
 # for request file
 find $ssl_dir -type f -name \*.pem | while read file; do
-    cat $file | openssl req -noout -text
+    cat $file | openssl req -noout
     if [ $? != 0 ]; then
         echo "can not read request file: $file"
         exit 1
@@ -38,7 +28,7 @@ done
 
 # for request file
 find $ssl_dir -type f -name \*.csr | while read file; do
-    cat $file | openssl req -noout -text
+    cat $file | openssl req -noout
     if [ $? != 0 ]; then
         echo "can not read request file: $file"
         exit 1
@@ -47,14 +37,15 @@ done
 
 # for cert file
 find $ssl_dir -type f -name \*.crt | while read file; do
-    cat $file | openssl x509 -text -enddate
+    expiration_date=$(cat $file | openssl x509 -dates -noout)
     if [ $? != 0 ]; then
         echo "can not read cert file: $file"
         exit 1
     fi
-    cat $file | openssl x509 -text -checkend $expiration_threshold_seconds
+    cat $file | openssl x509 -checkend $expiration_threshold_seconds
     if [ $? != 0 ]; then
-        echo "cert will expire in $expiration_threshold_seconds seconds: $file"
+        echo "file : $file"
+        echo "$expiration_date"
         exit 1
     fi
 done
