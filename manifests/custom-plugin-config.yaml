@@ -23,21 +23,21 @@ data:
         {
           "type": "temporary",
           "reason": "CertWillExpire",
-          "path": "/custom-config/plugin/cert_expiration_check.sh",
+          "path": "/custom-config/cert_expiration_check.sh",
           "timeout": "3s"
         },
         {
           "type": "permanent",
           "condition": "CertExpired",
           "reason": "CertExpired",
-          "path": "/custom-config/plugin/cert_expiration_check.sh",
+          "path": "/custom-config/cert_expiration_check.sh",
           "timeout": "3s"
         },
         {
           "type": "permanent",
           "condition": "CertNotReady",
           "reason": "Unknown",
-          "path": "/custom-config/plugin/cert_expiration_check.sh",
+          "path": "/custom-config/cert_expiration_check.sh",
           "timeout": "3s"
         }
       ]
