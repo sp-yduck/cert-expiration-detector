@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #ssl_dir=/etc/kubernetes/ssl
-ssl_dir=./sample_dir
+ssl_dir=/etc/kubernetes/pki
 expiration_threshold_seconds=2592000 # 30days
 
 #for key file
